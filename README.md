@@ -1,5 +1,3 @@
-Viewed start-04-unit-touch-basics.html:1-668
-
 針對 **`start-04-unit-touch-basics` (觸控事件的生命週期：從指尖到搖桿)** 單元，這是學員建立「觸覺操控感」的最底層開發課。它要求學員具備 **多點觸控辨識 (Multi-point Tracking)** 與 **座標映射 (Coordinate Mapping)** 的硬核心技術，學習如何處理 `touchstart`、`touchmove`、`touchend` 的生命週期，並解決行動裝置上臭名昭彰的「300 毫秒點擊延遲 (300ms Click Delay)」問題。
 
 以下是在 **GitHub Classroom** 部署其作業 (Assignments) 的具體建議：
