@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Touch Basics: Lifecycle & Coordinates</title>
+    <meta name="description" content="A touch visualization sandbox for learning multi-touch events and coordinate mapping.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono&family=Outfit:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>TOUCH VISUALIZATION LAB</h1>
+    </header>
+
+    <main class="main-container">
+        <!-- Task 2: Multi-Touch Tracking -->
+        <section id="joystick-zone" class="control-zone">
+            <span class="label">Joystick Mapping Area</span>
+            <div id="joystick-container">
+                <div id="joystick-knob"></div>
+            </div>
+        </section>
+
+        <!-- Task 1: Zero-Latency Button -->
+        <section id="button-zone" class="control-zone">
+            <span class="label">Response Timing Area</span>
+            <div id="action-button">FIRE</div>
+        </section>
+    </main>
+
+    <!-- Touch Log Panel -->
+    <div id="log-panel" class="log-panel">
+        <div>> System Initialized...</div>
+        <div>> Waiting for touch input...</div>
+    </div>
+
+    <!-- Visual feedback indicators will be injected here by JS -->
+    <div id="touch-layer"></div>
+
+    <script src="js/touch.js"></script>
+</body>
+</html>

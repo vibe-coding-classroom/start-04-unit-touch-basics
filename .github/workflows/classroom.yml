@@ -1,0 +1,69 @@
+name: Autograding
+on: [push]
+jobs:
+  autograding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: File Structure Check
+        id: test-files
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: File Structure Check
+          setup-command: ""
+          command: "test -f index.html && test -f style.css && test -f js/touch.js"
+          timeout: 1
+          max-score: 20
+
+      - name: Zero-Latency Implementation
+        id: test-zero-latency
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: Zero-Latency Implementation
+          setup-command: ""
+          command: "grep \"actionButton.addEventListener('touchstart'\" js/touch.js && grep \"e.preventDefault()\" js/touch.js | grep -v \"//\""
+          timeout: 1
+          max-score: 20
+
+      - name: Multi-Touch Tracking
+        id: test-multi-touch
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: Multi-Touch Tracking
+          setup-command: ""
+          command: "grep \"activeTouches.set\" js/touch.js | grep -v \"//\""
+          timeout: 1
+          max-score: 20
+
+      - name: Coordinate Mapping Logic
+        id: test-mapping
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: Coordinate Mapping Logic
+          setup-command: ""
+          command: "grep \"/ (rect.width / 2)\" js/touch.js | grep -v \"//\""
+          timeout: 1
+          max-score: 20
+
+      - name: UI Safety Measures
+        id: test-ui-safety
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: UI Safety Measures
+          setup-command: ""
+          command: "grep \"touch-action: none\" style.css && grep \"passive: false\" js/touch.js | grep -v \"//\""
+          timeout: 1
+          max-score: 20
+
+
+      - name: Autograding Reporter
+        uses: education/autograding-grading-reporter@v1
+        env:
+          TEST-FILES_RESULTS: "${{steps.test-files.outputs.result}}"
+          TEST-ZERO-LATENCY_RESULTS: "${{steps.test-zero-latency.outputs.result}}"
+          TEST-MULTI-TOUCH_RESULTS: "${{steps.test-multi-touch.outputs.result}}"
+          TEST-MAPPING_RESULTS: "${{steps.test-mapping.outputs.result}}"
+          TEST-UI-SAFETY_RESULTS: "${{steps.test-ui-safety.outputs.result}}"
+        with:
+          runners: test-files,test-zero-latency,test-multi-touch,test-mapping,test-ui-safety
