@@ -55,8 +55,13 @@ document.addEventListener('touchstart', (e) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
         const touch = e.changedTouches[i];
         
-        // TODO: Store touch data in activeTouches Map using touch.identifier as key
-        // activeTouches.set(touch.identifier, { ... });
+        // Store touch data in activeTouches Map using touch.identifier as key
+        activeTouches.set(touch.identifier, {
+            startX: touch.clientX,
+            startY: touch.clientY,
+            currentX: touch.clientX,
+            currentY: touch.clientY
+        });
         
         createTouchIndicator(touch);
         log(`New Touch: ID=${touch.identifier} at [${Math.round(touch.clientX)}, ${Math.round(touch.clientY)}]`);
@@ -64,9 +69,16 @@ document.addEventListener('touchstart', (e) => {
 }, { passive: false });
 
 document.addEventListener('touchmove', (e) => {
-    // TODO: Loop through changedTouches and update their indicators/logic
     for (let i = 0; i < e.changedTouches.length; i++) {
         const touch = e.changedTouches[i];
+        
+        // Update current position in state
+        if (activeTouches.has(touch.identifier)) {
+            const data = activeTouches.get(touch.identifier);
+            data.currentX = touch.clientX;
+            data.currentY = touch.clientY;
+        }
+
         updateTouchIndicator(touch);
         
         // Handle Joystick Logic if the touch is within the joystick zone
@@ -79,6 +91,7 @@ document.addEventListener('touchmove', (e) => {
 document.addEventListener('touchend', (e) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
         const touch = e.changedTouches[i];
+        activeTouches.delete(touch.identifier);
         removeTouchIndicator(touch.identifier);
         log(`End Touch: ID=${touch.identifier}`);
     }
@@ -88,6 +101,7 @@ document.addEventListener('touchcancel', (e) => {
     // Handle cases where the system interrupts the touch (e.g., alert popups)
     for (let i = 0; i < e.changedTouches.length; i++) {
         const touch = e.changedTouches[i];
+        activeTouches.delete(touch.identifier);
         removeTouchIndicator(touch.identifier);
         log(`Cancel Touch: ID=${touch.identifier}`);
     }
@@ -102,16 +116,20 @@ function handleJoystick(touch) {
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     
-    // TODO: Calculate relative offset from center
-    // let dx = touch.clientX - centerX;
-    // let dy = touch.clientY - centerY;
+    // Calculate relative offset from center
+    let dx = touch.clientX - centerX;
+    let dy = touch.clientY - centerY;
     
-    // TODO: Normalize coordinates to -1.0 to 1.0 range
-    // let normalizedX = dx / (rect.width / 2);
-    // let normalizedY = dy / (rect.height / 2);
+    // Normalize coordinates to -1.0 to 1.0 range
+    let normalizedX = dx / (rect.width / 2);
+    let normalizedY = dy / (rect.height / 2);
+    
+    // Clamp values to -1.0 to 1.0
+    normalizedX = Math.max(-1, Math.min(1, normalizedX));
+    normalizedY = Math.max(-1, Math.min(1, normalizedY));
     
     // Update Knob Position (Visual only for now)
-    // joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+    joystickKnob.style.transform = `translate(${normalizedX * (rect.width / 2)}px, ${normalizedY * (rect.height / 2)}px)`;
     
     log(`Joystick: Mapping X=${touch.clientX.toFixed(0)} Y=${touch.clientY.toFixed(0)}`);
 }
